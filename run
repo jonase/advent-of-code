@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+echo "- Day ${1} -"
+
+mkdir -p out
+clang day/$1/solution.c -o out/$1 -g
+
+cat day/$1/input | out/$1
