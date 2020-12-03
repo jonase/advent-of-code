@@ -8,11 +8,10 @@
 int hit_count(char** terrain, int slope_x, int slope_y) {
     int pos_x = 0, pos_y = 0, tree_hits = 0;
 
-    for (int pos_y = 0; pos_y < TERRAIN_HEIGHT; pos_y += slope_y) {
+    for (int pos_y = 0; pos_y < TERRAIN_HEIGHT; pos_y += slope_y, pos_x += slope_x) {
         if (terrain[pos_y][pos_x % TERRAIN_WIDTH] == '#'){
             tree_hits++;
         }
-        pos_x += slope_x;
     }
 
     return tree_hits;

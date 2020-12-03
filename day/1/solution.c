@@ -25,7 +25,7 @@ int solution_1(int* numbers) {
 // O(n^2)
 int solution_2(int* numbers) {
     for(int i = 0; i < NUMBERS_COUNT - 2; i++) {
-        int x = *(numbers + i);
+        int x = numbers[i];
         int target = 2020 - x, left = i + 1, right = NUMBERS_COUNT - 1;
         if (find_sum_indices(numbers, &left, &right, target)) {
             return x * numbers[left] * numbers[right];
