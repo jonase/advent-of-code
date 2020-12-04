@@ -49,10 +49,13 @@ int int_cmp(const void* a, const void* b) {
    return *(int*)a - *(int*)b;
 }
 
-int main(void) {
+int main(int argc, char** argv) {
+    FILE* input = fopen(argv[1], "r");
     int numbers[NUMBERS_COUNT];
 
-    read_numbers(stdin, numbers);
+    read_numbers(input, numbers);
+    fclose(input);
+
     qsort(numbers, NUMBERS_COUNT, sizeof(int), int_cmp);
 
     printf("Solution 1: %9d\n", solution_1(numbers));

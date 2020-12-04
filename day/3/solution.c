@@ -27,10 +27,12 @@ void read_terrain(char** terrain, FILE* file) {
     free(line);
 }
 
-int main(void) {
+int main(int argc, char** argv) {
     char* terrain[TERRAIN_HEIGHT];
 
-    read_terrain(terrain, stdin);
+    FILE* input = fopen(argv[1], "r");
+    read_terrain(terrain, input);
+    fclose(input);
 
     int slope_1_1 = hit_count(terrain, 1, 1);
     int slope_3_1 = hit_count(terrain, 3, 1);

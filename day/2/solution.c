@@ -19,7 +19,8 @@ int is_valid_part_2(char* password, char ch, int pos1, int pos2) {
     return (ch == ch1) != (ch == ch2);
 }
 
-int main(void) {
+int main(int argc, char **argv) {
+    FILE* input = fopen(argv[1], "r");
     int valid_count_part_1 = 0;
     int valid_count_part_2 = 0;
 
@@ -27,7 +28,7 @@ int main(void) {
     char ch;
     int a, b;
 
-    while(scanf("%d-%d %c: %s", &a, &b, &ch, password) != EOF) {
+    while(fscanf(input, "%d-%d %c: %s", &a, &b, &ch, password) != EOF) {
         if (is_valid_part_1(password, ch, a, b)) {
             valid_count_part_1++;
         }
@@ -36,6 +37,8 @@ int main(void) {
             valid_count_part_2++;
         }
     }
+
+    fclose(input);
 
     printf("Solution 1: %d\n", valid_count_part_1);
     printf("Solution 2: %d\n", valid_count_part_2);
