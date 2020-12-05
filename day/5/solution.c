@@ -3,12 +3,15 @@
 
 #define BOARDING_PASS_COUNT 789
 
+/*
+ * FBFBBFFRLR
+ * 0101100101 = 357
+ */
 int seat_id(char* boarding_pass) {
     int sid = 0;
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++, sid <<= 1) {
         char ch = boarding_pass[i];
         if (ch == 'B' || ch == 'R') sid++;
-        sid <<= 1;
     }
     return sid >> 1;
 }
