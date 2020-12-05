@@ -34,17 +34,6 @@ int solution_2(int* numbers) {
     return -1;
 }
 
-void read_numbers(FILE* file, int* numbers) {
-    char *line = NULL;
-    size_t len = 0;
-    int i = 0;
-    while (getline(&line, &len, file) != EOF) {
-        int number = (int) strtol(line, NULL, 10);
-        numbers[i++] = number;
-    }
-    free(line);
-}
-
 int int_cmp(const void* a, const void* b) {
    return *(int*)a - *(int*)b;
 }
@@ -52,8 +41,12 @@ int int_cmp(const void* a, const void* b) {
 int main(int argc, char** argv) {
     FILE* input = fopen(argv[1], "r");
     int numbers[NUMBERS_COUNT];
+    int number, i = 0;
 
-    read_numbers(input, numbers);
+    while (fscanf(input, "%d", &number) != EOF) {
+        numbers[i++] = number;
+    }
+
     fclose(input);
 
     qsort(numbers, NUMBERS_COUNT, sizeof(int), int_cmp);
