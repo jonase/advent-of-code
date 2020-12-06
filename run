@@ -5,6 +5,6 @@ set -e
 echo "- Day ${1} -"
 
 mkdir -p out
-clang -O2 day/$1/solution.c -o out/$1
+clang -O2 -Wall day/$1/solution.c -o out/$1
 
 out/$1 day/$1/input

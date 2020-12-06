@@ -75,6 +75,20 @@ int parse_int(char* s) {
     return (int) strtol(s, NULL, 10);
 }
 
+void passport_add_entries(passport* p, char* line) {
+    for(char* key = strtok(line, ":"); key != NULL; key = strtok(NULL, ":")) {
+        char* value = strtok(NULL, " \n");
+        if (streq(key, "byr")) p->byr = parse_int(value);
+        else if (streq(key, "eyr")) p->eyr = parse_int(value);
+        else if (streq(key, "iyr")) p->iyr = parse_int(value);
+        else if (streq(key, "hgt")) p->hgt = strdup(value);
+        else if (streq(key, "hcl")) p->hcl = strdup(value);
+        else if (streq(key, "ecl")) p->ecl = strdup(value);
+        else if (streq(key, "pid")) p->pid = strdup(value);
+        else if (streq(key, "cid")) p->cid = parse_int(value);
+    }
+}
+
 void parse_passports(FILE* file, passport* passports) {
     char* line = NULL;
     size_t len = 0;
@@ -83,27 +97,10 @@ void parse_passports(FILE* file, passport* passports) {
 
     while (read != EOF) {
         passport p = {};
-        char* key;
-        char* value;
         while((read = getline(&line, &len, file)) && read != EOF && read != 1) {
-            key = strtok(line, ":");
-            while (key != NULL) {
-                value = strtok(NULL, " \n");
-
-                if (streq(key, "byr")) p.byr = parse_int(value);
-                else if (streq(key, "eyr")) p.eyr = parse_int(value);
-                else if (streq(key, "iyr")) p.iyr = parse_int(value);
-                else if (streq(key, "hgt")) p.hgt = strdup(value);
-                else if (streq(key, "hcl")) p.hcl = strdup(value);
-                else if (streq(key, "ecl")) p.ecl = strdup(value);
-                else if (streq(key, "pid")) p.pid = strdup(value);
-                else if (streq(key, "cid")) p.cid = parse_int(value);
-
-                key = strtok(NULL, ":");
-            }
+            passport_add_entries(&p, line);
         }
-        passports[n] = p;
-        n++;
+        passports[n++] = p;
     }
     free(line);
 }

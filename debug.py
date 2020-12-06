@@ -32,4 +32,4 @@ def compile(debugger, command, exe_ctx, result, internal_dict):
     except Exception:
         print(f"Run 'day n' first")
         exit(1)
-    result = subprocess.run(["clang", f"day/{day}/solution.c", "-g", "-o", f"out/{day}"], stdout=subprocess.PIPE)
+    result = subprocess.run(["clang", f"day/{day}/solution.c", "-Wall", "-g", "-o", f"out/{day}"], stdout=subprocess.PIPE)
