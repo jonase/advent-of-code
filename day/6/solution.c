@@ -27,10 +27,6 @@ az_set az_set_union(az_set set1, az_set set2) {
     return set1 | set2;
 }
 
-az_set az_set_add_all(az_set set, char* s) {
-    return az_set_union(set, az_set_init(s));
-}
-
 int az_set_count(az_set set) {
     return __builtin_popcount(set);
 }
@@ -54,8 +50,9 @@ int main(int argc, char** argv) {
         az_set every_yes_set = az_set_init(line);
 
         while((read = getline(&line, &len, input)) && read != EOF && read != 1) {
-            any_yes_set = az_set_union(any_yes_set, az_set_init(line));
-            every_yes_set = az_set_intersection(every_yes_set, az_set_init(line));
+            az_set set = az_set_init(line);
+            any_yes_set = az_set_union(any_yes_set, set);
+            every_yes_set = az_set_intersection(every_yes_set, set);
         }
 
         any_total_count += az_set_count(any_yes_set);
