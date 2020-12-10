@@ -3,7 +3,7 @@
 
 #define ADAPTERS_COUNT (90 + 2)
 
-void read_input(FILE*, int**);
+void read_input(FILE*, int*);
 int count_diff(int*, int);
 long count_combinations(int*);
 
@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 
     int* numbers = malloc(sizeof(int) * ADAPTERS_COUNT);
 
-    read_input(input, &numbers);
+    read_input(input, numbers);
 
     printf("Solution 1: %d\n", count_diff(numbers, 1) * count_diff(numbers, 3));
     printf("Solution 2: %ld\n", count_combinations(numbers));
@@ -25,18 +25,18 @@ int int_cmp(const void* a, const void* b) {
     return *(int*)a - *(int*)b;
 }
 
-void read_input(FILE* file, int** numbers) {
-    (*numbers)[0] = 0;
+void read_input(FILE* file, int* numbers) {
+    numbers[0] = 0;
 
     int n = 0, i = 1;
     while(fscanf(file, "%d", &n) != EOF) {
-        (*numbers)[i++] = n;
+        numbers[i++] = n;
     }
 
-    qsort(*numbers, ADAPTERS_COUNT-1, sizeof(int), &int_cmp);
+    qsort(numbers, ADAPTERS_COUNT-1, sizeof(int), &int_cmp);
 
-    n = (*numbers)[i-1];
-    (*numbers)[i] = n + 3;
+    n = numbers[i-1];
+    numbers[i] = n + 3;
 }
 
 int count_diff (int* numbers, int n) {
