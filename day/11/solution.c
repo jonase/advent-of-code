@@ -7,10 +7,10 @@
 #define ROWS 91
 #define COLS 91
 
-typedef struct Loc {
+typedef struct Position {
     int row;
     int col;
-} Loc;
+} Position;
 
 typedef enum Dir {
     NORTH, SOUTH, EAST, WEST,
@@ -29,29 +29,28 @@ bool grideq(char* grid1, char* grid2) {
     }
     return true;
 }
-char get(char* grid, Loc loc) {
-    int row = loc.row;
-    int col = loc.col;
-    if (row < 0 || row > ROWS - 1 || col < 0 || col > COLS - 1) {
+
+bool out_of_bounds(Position pos) {
+    return pos.row < 0 || pos.row > ROWS - 1 || pos.col < 0 || pos.col > COLS - 1;
+}
+
+char get(char* grid, Position pos) {
+    if (out_of_bounds(pos)) {
         return '_';
     } else {
-        return *(grid + row * COLS + col);
+        return *(grid + pos.row * COLS + pos.col);
     }
 }
 
-void set(char* grid, Loc loc, char c) {
-    int row = loc.row;
-    int col = loc.col;
-    if (row < 0 || row > ROWS - 1 || col < 0 || col > COLS - 1) {
-        return;
-    } else {
-        *(grid + row * COLS + col) = c;
+void set(char* grid, Position pos, char c) {
+    if (!out_of_bounds(pos)) {
+        *(grid + pos.row * COLS + pos.col) = c;
     }
 }
 
-Loc move(Loc loc, Dir dir) {
-    int row = loc.row;
-    int col = loc.col;
+Position move(Position pos, Dir dir) {
+    int row = pos.row;
+    int col = pos.col;
     switch (dir) {
         case NORTH: row--; break;
         case SOUTH: row++; break;
@@ -64,67 +63,67 @@ Loc move(Loc loc, Dir dir) {
         default: assert(0);
     }
 
-    Loc new_loc = { row, col };
-    return new_loc;
+    Position new_pos = { row, col };
+    return new_pos;
 }
 
-char neighbour(char* grid, Loc loc, Dir dir) {
-    return get(grid, move(loc, dir));
+char neighbour(char* grid, Position pos, Dir dir) {
+    return get(grid, move(pos, dir));
 }
 
-int occupied_count(char* grid, Loc loc) {
+int occupied_count(char* grid, Position pos) {
     return
-        (neighbour(grid, loc, NORTH_WEST) == '#') +
-        (neighbour(grid, loc, NORTH)      == '#') +
-        (neighbour(grid, loc, NORTH_EAST) == '#') +
-        (neighbour(grid, loc, EAST)       == '#') +
-        (neighbour(grid, loc, SOUTH_EAST) == '#') +
-        (neighbour(grid, loc, SOUTH)      == '#') +
-        (neighbour(grid, loc, SOUTH_WEST) == '#') +
-        (neighbour(grid, loc, WEST)       == '#');
+        (neighbour(grid, pos, NORTH_WEST) == '#') +
+        (neighbour(grid, pos, NORTH)      == '#') +
+        (neighbour(grid, pos, NORTH_EAST) == '#') +
+        (neighbour(grid, pos, EAST)       == '#') +
+        (neighbour(grid, pos, SOUTH_EAST) == '#') +
+        (neighbour(grid, pos, SOUTH)      == '#') +
+        (neighbour(grid, pos, SOUTH_WEST) == '#') +
+        (neighbour(grid, pos, WEST)       == '#');
 }
 
-char first_in_sight(char* grid, Loc loc, Dir dir) {
-    char grid_item = get(grid, loc);
+char first_in_sight(char* grid, Position pos, Dir dir) {
+    char grid_item = get(grid, pos);
     if (grid_item == '_' || grid_item == 'L' || grid_item == '#') {
         return grid_item;
     } else {
-        return first_in_sight(grid, move(loc, dir), dir);
+        return first_in_sight(grid, move(pos, dir), dir);
     }
 
 }
 
-int occupied_in_sight_count(char* grid, Loc loc) {
+int occupied_in_sight_count(char* grid, Position pos) {
     return
-        (first_in_sight(grid, move(loc, NORTH_WEST), NORTH_WEST) == '#') +
-        (first_in_sight(grid, move(loc, NORTH     ), NORTH)      == '#') +
-        (first_in_sight(grid, move(loc, NORTH_EAST), NORTH_EAST) == '#') +
-        (first_in_sight(grid, move(loc, EAST      ), EAST)       == '#') +
-        (first_in_sight(grid, move(loc, SOUTH_EAST), SOUTH_EAST) == '#') +
-        (first_in_sight(grid, move(loc, SOUTH     ), SOUTH)      == '#') +
-        (first_in_sight(grid, move(loc, SOUTH_WEST), SOUTH_WEST) == '#') +
-        (first_in_sight(grid, move(loc, WEST      ), WEST)       == '#');
+        (first_in_sight(grid, move(pos, NORTH_WEST), NORTH_WEST) == '#') +
+        (first_in_sight(grid, move(pos, NORTH     ), NORTH)      == '#') +
+        (first_in_sight(grid, move(pos, NORTH_EAST), NORTH_EAST) == '#') +
+        (first_in_sight(grid, move(pos, EAST      ), EAST)       == '#') +
+        (first_in_sight(grid, move(pos, SOUTH_EAST), SOUTH_EAST) == '#') +
+        (first_in_sight(grid, move(pos, SOUTH     ), SOUTH)      == '#') +
+        (first_in_sight(grid, move(pos, SOUTH_WEST), SOUTH_WEST) == '#') +
+        (first_in_sight(grid, move(pos, WEST      ), WEST)       == '#');
 
 }
 
 void iterate_part_1(char* grid, char* next_grid) {
     for (int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
-            Loc loc = { r, c };
-            int n = occupied_count(grid, loc);
-            if (get(grid, loc) == 'L' && n == 0) set(next_grid, loc, '#');
-            if (get(grid, loc) == '#' && n >= 4) set(next_grid, loc, 'L');
+            Position pos = { r, c };
+            int n = occupied_count(grid, pos);
+            if (get(grid, pos) == 'L' && n == 0) set(next_grid, pos, '#');
+            if (get(grid, pos) == '#' && n >= 4) set(next_grid, pos, 'L');
         }
     }
 }
 
 void iterate_part_2(char* grid, char* next_grid) {
-    for (int r = 0; r < ROWS; r++) {
+    for(int r = 0; r < ROWS; r++) {
         for (int c = 0; c < COLS; c++) {
-            Loc loc = { r, c };
-            int n = occupied_in_sight_count(grid, loc);
-            if (get(grid, loc) == 'L' && n == 0) set(next_grid, loc, '#');
-            if (get(grid, loc) == '#' && n >= 5) set(next_grid, loc, 'L');
+            Position pos = { r, c };
+            int n = occupied_in_sight_count(grid, pos);
+            if (get(grid, pos) == 'L' && n == 0) set(next_grid, pos, '#');
+            if (get(grid, pos) == '#' && n >= 5) set(next_grid, pos, 'L');
         }
     }
 }
@@ -162,7 +161,6 @@ int main(int argc, char** argv) {
         if (grideq(next_grid, grid)) break;
         gridcpy(grid, next_grid);
     }
-
     printf("Solution 1: %d\n", count_occupied_seats(next_grid));
 
     gridcpy(grid, og_grid);
@@ -173,6 +171,5 @@ int main(int argc, char** argv) {
         if (grideq(next_grid, grid)) break;
         gridcpy(grid, next_grid);
     }
-
     printf("Solution 2: %d\n", count_occupied_seats(next_grid));
  }
