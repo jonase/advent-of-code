@@ -21,7 +21,7 @@ int manhattan_distance(Ship ship);
 int main(int argc, char** argv) {
     FILE* input = fopen(argv[1], "r");
 
-    Ship ship_p1 = { 0, 0, 1, 0};
+    Ship ship_p1 = { 0, 0, 1, 0 };
     Ship ship_p2 = { 0, 0, 10, 1 };
 
     size_t len = 0;
@@ -35,7 +35,7 @@ int main(int argc, char** argv) {
     fclose(input);
 
     printf("Solution 1: %d\n", manhattan_distance(ship_p1));
-    printf("Solution 1: %d\n", manhattan_distance(ship_p2));
+    printf("Solution 2: %d\n", manhattan_distance(ship_p2));
 }
 
 int manhattan_distance(Ship ship) {
