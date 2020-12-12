@@ -8,10 +8,7 @@ typedef struct Instruction {
 } Instruction;
 
 typedef struct Ship {
-    int x;
-    int y;
-    int dx;
-    int dy;
+    int x, y, dx, dy;
 } Ship;
 
 void navigate_p1(Ship* ship, Instruction instruction);
@@ -24,14 +21,11 @@ int main(int argc, char** argv) {
     Ship ship_p1 = { 0, 0, 1, 0 };
     Ship ship_p2 = { 0, 0, 10, 1 };
 
-    size_t len = 0;
-    char* line = NULL;
-    while(getline(&line, &len, input) != EOF) {
-        Instruction instruction = { line[0], strtol(line+1, NULL, 10) };
-        navigate_p1(&ship_p1, instruction);
-        navigate_p2(&ship_p2, instruction);
+    char action; int value;
+    while(fscanf(input, "%c%d\n", &action, &value) != EOF) {
+        navigate_p1(&ship_p1, (Instruction) { action, value });
+        navigate_p2(&ship_p2, (Instruction) { action, value });
     };
-    free(line);
     fclose(input);
 
     printf("Solution 1: %d\n", manhattan_distance(ship_p1));
@@ -42,16 +36,11 @@ int manhattan_distance(Ship ship) {
     return abs(ship.x) + abs(ship.y);
 }
 
-int  rot90[4] = {  0, -1,  1,  0 };
-int rot180[4] = { -1,  0,  0, -1 };
-int rot270[4] = {  0,  1, -1,  0 };
-
 int* rotation_matrix(int degree) {
-    switch (degree)
-    {
-        case 90:  return rot90;
-        case 180: return rot180;
-        case 270: return rot270;
+    switch (degree) {
+        case 90:  return (int[4]) {  0, -1,  1,  0 };
+        case 180: return (int[4]) { -1,  0,  0, -1 };
+        case 270: return (int[4]) {  0,  1, -1,  0 };
         default: assert(0);
     }
 }
@@ -70,57 +59,29 @@ void forward(Ship* ship, int value) {
 
 void navigate_lrf(Ship* ship, Instruction instruction) {
     switch (instruction.action) {
-        case 'L':
-            rotate(ship, rotation_matrix(instruction.value));
-            break;
-        case 'R':
-            rotate(ship, rotation_matrix(360 - instruction.value));
-            break;
-        case 'F':
-            forward(ship, instruction.value);
-            break;
-        default:
-            assert(0);
-            break;
+        case 'L': rotate(ship, rotation_matrix(instruction.value)); break;
+        case 'R': rotate(ship, rotation_matrix(360 - instruction.value)); break;
+        case 'F': forward(ship, instruction.value); break;
+        default: assert(0);
     }
 }
 
 void navigate_p1(Ship* ship, Instruction instruction) {
     switch (instruction.action) {
-        case 'N':
-            ship->y += instruction.value;
-            break;
-        case 'S':
-            ship->y -= instruction.value;
-            break;
-        case 'E':
-            ship->x += instruction.value;
-            break;
-        case 'W':
-            ship->x -= instruction.value;
-            break;
-        default:
-            navigate_lrf(ship, instruction);
-            break;
+        case 'N': ship->y += instruction.value; break;
+        case 'S': ship->y -= instruction.value; break;
+        case 'E': ship->x += instruction.value; break;
+        case 'W': ship->x -= instruction.value; break;
+        default: navigate_lrf(ship, instruction); break;
     }
 }
 
 void navigate_p2(Ship* ship, Instruction instruction) {
     switch (instruction.action) {
-        case 'N':
-            ship->dy += instruction.value;
-            break;
-        case 'S':
-            ship->dy -= instruction.value;
-            break;
-        case 'E':
-            ship->dx += instruction.value;
-            break;
-        case 'W':
-            ship->dx -= instruction.value;
-            break;
-        default:
-            navigate_lrf(ship, instruction);
-            break;
+        case 'N': ship->dy += instruction.value; break;
+        case 'S': ship->dy -= instruction.value; break;
+        case 'E': ship->dx += instruction.value; break;
+        case 'W': ship->dx -= instruction.value; break;
+        default: navigate_lrf(ship, instruction); break;
     }
 }
