@@ -14,9 +14,9 @@ typedef struct Assignment {
 } Assignment;
 
 typedef struct Instruction {
-    enum InstructionType instruction_type;
+    InstructionType instruction_type;
     union {
-        struct Assignment assignment;
+        Assignment assignment;
         char* mask;
     };
 } Instruction;
@@ -225,7 +225,6 @@ int hash(uint64_t address) {
 }
 
 void memory_set(Memory* memory, uint64_t address, uint64_t value) {
-
     int bucket_idx = hash(address) % MEMORY_BUCKETS;
     if (memory->buckets[bucket_idx] == NULL) {
         MemoryNode* item = memory_node_init(address, value);
@@ -248,5 +247,3 @@ uint64_t memory_sum(Memory* memory) {
     }
     return sum;
 }
-
-
