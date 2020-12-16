@@ -16,14 +16,8 @@ int play(int* init_nums, int init_count, int iterations) {
 
     for (int i = init_count; i < iterations; i++) {
         int previously_spoken_at = nums[last_spoken];
-        int next_to_speek;
-        if (previously_spoken_at == -1) {
-            next_to_speek = 0;
-        } else {
-            next_to_speek = i - previously_spoken_at - 1;
-        }
         nums[last_spoken] = i - 1;
-        last_spoken = next_to_speek;
+        last_spoken = previously_spoken_at == -1 ? 0 : i - previously_spoken_at - 1;
     }
 
     free(nums);
