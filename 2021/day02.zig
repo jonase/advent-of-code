@@ -9,20 +9,16 @@ const Command = struct {
     val: u32,
 };
 
+const ops = std.ComptimeStringMap(Op, .{
+    .{ "forward", .forward },
+    .{ "up", .up },
+    .{ "down", .down },
+});
+
 fn parseCommand(command_str: []const u8) !Command {
     var command_iter = std.mem.split(u8, command_str, " ");
-    const op_str = command_iter.next().?;
-    const op = if (std.mem.eql(u8, op_str, "forward"))
-        Op.forward
-    else if (std.mem.eql(u8, op_str, "down"))
-        Op.down
-    else if (std.mem.eql(u8, op_str, "up"))
-        Op.up
-    else
-        unreachable;
-
     return Command{
-        .op = op,
+        .op = ops.get(command_iter.next().?) orelse unreachable,
         .val = try std.fmt.parseUnsigned(u32, command_iter.next().?, 10),
     };
 }
