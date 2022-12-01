@@ -3,7 +3,8 @@ const input = @embedFile("day07.txt");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = &gpa.allocator;
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
 
     const nums: []usize = blk: {
         var list = std.ArrayList(usize).init(allocator);
@@ -17,7 +18,9 @@ pub fn main() !void {
 
     var max = std.mem.max(usize, nums);
     var fuel_requirements_part_1 = try allocator.alloc(usize, max);
+    defer allocator.free(fuel_requirements_part_1);
     var fuel_requirements_part_2 = try allocator.alloc(usize, max);
+    defer allocator.free(fuel_requirements_part_2);
 
     for (fuel_requirements_part_1) |*fuel_requirement, p| {
         var sum: usize = 0;

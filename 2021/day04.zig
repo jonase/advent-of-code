@@ -8,7 +8,9 @@ const Board = struct {
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    const allocator = &gpa.allocator;
+    defer _ = gpa.deinit();
+
+    const allocator = gpa.allocator();
 
     var iter = std.mem.split(u8, input, "\n\n");
 
