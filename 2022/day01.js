@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require("fs");
 
 const inputs = fs.readFileSync("day01.txt", "utf-8").split("\n\n");
