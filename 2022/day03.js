@@ -20,40 +20,27 @@ function priority(item) {
 }
 
 function part1() {
-  let commonItems = [];
-
+  let sum = 0;
   for (const rugsack of rugsacks) {
     const compartmentA = new Set(rugsack.slice(0, rugsack.length / 2));
     const compartmentB = new Set(rugsack.slice(rugsack.length / 2));
 
-    commonItems.push(intersection(compartmentA, compartmentB));
-  }
-
-  let sum = 0;
-  for (const items of commonItems) {
-    for (const item of items) {
-      sum += priority(item);
-    }
+    const common = intersection(compartmentA, compartmentB);
+    sum += priority([...common][0]);
   }
 
   console.log("Part 1:", sum);
 }
 
 function part2() {
-  const n = rugsacks.length;
-  const items = [];
-  for (let i = 0; i < n / 3; i++) {
+  let sum = 0;
+  for (let i = 0; i < rugsacks.length / 3; i++) {
     const rugsack1 = new Set(rugsacks[i * 3 + 0]);
     const rugsack2 = new Set(rugsacks[i * 3 + 1]);
     const rugsack3 = new Set(rugsacks[i * 3 + 2]);
 
     let common = intersection(intersection(rugsack1, rugsack2), rugsack3);
-    items.push([...common][0]);
-  }
-
-  let sum = 0;
-  for (const item of items) {
-    sum += priority(item);
+    sum += priority([...common][0]);
   }
 
   console.log("Part 2:", sum);
