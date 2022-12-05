@@ -37,9 +37,7 @@ function topString(stacks) {
 function part1() {
   let [stacks, moves] = parse(input);
 
-  for (const move of moves) {
-    let [count, from, to] = move;
-
+  for (let [count, from, to] of moves) {
     while (count > 0) {
       const x = stacks[from].pop();
       stacks[to].push(x);
@@ -53,8 +51,7 @@ function part1() {
 function part2() {
   let [stacks, moves] = parse(input);
 
-  for (const move of moves) {
-    let [count, from, to] = move;
+  for (const [count, from, to] of moves) {
     const top = stacks[from].splice(stacks[from].length - count);
     stacks[to] = stacks[to].concat(top);
   }
