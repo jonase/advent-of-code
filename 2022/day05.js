@@ -9,8 +9,6 @@ function transpose(m) {
 }
 
 function parseStacks(stacks) {
-  stacks.slice(1)[0].length;
-
   const rows = stacks.reverse().slice(1);
 
   const cols = transpose(rows.map((s) => s.split("")))
@@ -37,18 +35,14 @@ function topString(stacks) {
 }
 
 function part1() {
-  function moveItem(stacks, from, to) {
-    const x = stacks[from].pop();
-    stacks[to].push(x);
-  }
-
   let [stacks, moves] = parse(input);
 
   for (const move of moves) {
     let [count, from, to] = move;
 
     while (count > 0) {
-      moveItem(stacks, from, to);
+      const x = stacks[from].pop();
+      stacks[to].push(x);
       count--;
     }
   }
@@ -57,16 +51,12 @@ function part1() {
 }
 
 function part2() {
-  function moveItems(stacks, count, from, to) {
-    const top = stacks[from].splice(stacks[from].length - count);
-    stacks[to] = stacks[to].concat(top);
-  }
-
   let [stacks, moves] = parse(input);
 
   for (const move of moves) {
     let [count, from, to] = move;
-    moveItems(stacks, count, from, to);
+    const top = stacks[from].splice(stacks[from].length - count);
+    stacks[to] = stacks[to].concat(top);
   }
 
   console.log("Part 2:", topString(stacks));
