@@ -8,18 +8,14 @@ function allDistinct(arr) {
   return new Set(arr).size === arr.length;
 }
 
-let i = 4;
-while (true) {
-  if (allDistinct(input.slice(i - 4, i))) break;
-  i++;
+function findMarker(size) {
+  let i = size;
+  while (true) {
+    if (allDistinct(input.slice(i - size, i))) break;
+    i++;
+  }
+  return i;
 }
 
-console.log("Part 1:", i);
-
-i = 14;
-while (true) {
-  if (allDistinct(input.slice(i - 14, i))) break;
-  i++;
-}
-
-console.log("Part 2:", i);
+console.log("Part 1:", findMarker(4));
+console.log("Part 2:", findMarker(14));
