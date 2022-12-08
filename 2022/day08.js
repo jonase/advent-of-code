@@ -15,24 +15,16 @@ const colGrid = transpose(grid);
 
 const size = grid.length;
 
-function max(arr) {
-  let max = arr[0];
-  for (const n of arr.slice(1)) {
-    if (n > max) max = n;
-  }
-  return max;
-}
-
 function isVisible(r, c) {
   const n = grid[r][c];
   let row = grid[r];
   let col = colGrid[c];
 
   return (
-    max(row.slice(0, c)) < n ||
-    max(row.slice(c + 1)) < n ||
-    max(col.slice(0, r)) < n ||
-    max(col.slice(r + 1)) < n
+    Math.max(...row.slice(0, c)) < n ||
+    Math.max(...row.slice(c + 1)) < n ||
+    Math.max(...col.slice(0, r)) < n ||
+    Math.max(...col.slice(r + 1)) < n
   );
 }
 
