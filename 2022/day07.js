@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
 const fs = require("fs");
-const assert = require("assert");
 
 let input = fs.readFileSync("day07.txt", "utf-8");
 
@@ -18,21 +17,7 @@ function mkfile(parent, name, size) {
   return parent;
 }
 
-function spaces(n) {
-  return Array(2 * n + 1).join(" ");
-}
-
-function render(file, level) {
-  if (file.isDirectory) {
-    console.log(`${spaces(level)} - ${file.name} (dir)`);
-    file.children.forEach((element) => render(element, level + 1));
-  } else {
-    console.log(`${spaces(level)} - ${file.name} (file, size=${file.size})`);
-  }
-}
-
 function parseNext(input, parent) {
-  assert(input[0] === "$");
   const cmdString = input.substring(2, input.indexOf("\n"));
 
   if (cmdString.startsWith("cd")) {
@@ -61,25 +46,20 @@ function parseNext(input, parent) {
     }
 
     return [parent, nextInput];
-  } else assert(false);
+  }
 }
 
 let cwd = null;
 
 while (input != null) {
-  let [dir, nextInput] = parseNext(input, cwd);
-  input = nextInput;
-  cwd = dir;
+  [cwd, input] = parseNext(input, cwd);
 }
 
-while (true) {
-  if (cwd.parent != null) {
-    cwd = cwd.parent;
-  } else break;
+while (cwd.parent != null) {
+  cwd = cwd.parent;
 }
 
 function size(dir) {
-  assert(dir.isDirectory);
   let totalSize = 0;
   for (let file of dir.children) {
     if (file.isDirectory) {
@@ -92,8 +72,6 @@ function size(dir) {
 }
 
 function directorySizes(dir) {
-  assert(dir.isDirectory);
-
   let dirs = [{ name: dir.name, size: size(dir) }];
 
   for (const file of dir.children) {
