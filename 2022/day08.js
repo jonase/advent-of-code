@@ -17,8 +17,8 @@ const size = grid.length;
 
 function isVisible(r, c) {
   const n = grid[r][c];
-  let row = grid[r];
-  let col = colGrid[c];
+  const row = grid[r];
+  const col = colGrid[c];
 
   return (
     Math.max(...row.slice(0, c)) < n ||
@@ -48,8 +48,8 @@ function viewingDistance(n, arr) {
 
 function scenicScore(r, c) {
   const n = grid[r][c];
-  let row = grid[r];
-  let col = colGrid[c];
+  const row = grid[r];
+  const col = colGrid[c];
 
   return (
     viewingDistance(n, row.slice(0, c).reverse()) *
